@@ -20,8 +20,8 @@ public class Main {
         Neurone neurone2 = new Neurone(0, new Connexion(sortie, 0.3));
         Neurone neurone3 = new Neurone(0, new Connexion(sortie, 0.5));
 
-        neurone1.broadcast(1);
-        neurone2.broadcast(1);
-        neurone3.broadcast(1);
+        neurone1.broadcast(0.5);
+        neurone2.broadcast(0.5);
+        neurone3.broadcast(0.5);
     }
 }
