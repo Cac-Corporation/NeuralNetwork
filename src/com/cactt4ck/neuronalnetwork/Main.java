@@ -9,7 +9,7 @@ public class Main {
          *
          *le poids des connexions influe sur la valeur du message transmis & le bias est l'importance d'un neurone seul
          */
-        Neurone sortie = new Neurone(1.4, new Action() {
+        Neurone sortie = new Neurone(0, new Action() {
             @Override
             public void perform() {
                 System.out.println("J'ai été solicité");

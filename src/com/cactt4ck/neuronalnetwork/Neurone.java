@@ -25,13 +25,10 @@ public class Neurone {
     public void getMessage(double input){
         this.somme += input;
 
-        double f = 0;
-        if(somme >= bias){
-
-            if (Math.random() <= f) {
-                this.action.perform();
-                broadcast(f);
-            }
+        double f = 1D/(1+Math.pow(Math.E, -(bias + somme)));
+        if (Math.random() <= f) {
+            this.action.perform();
+            broadcast(f);
             somme = 0;
         }
     }
