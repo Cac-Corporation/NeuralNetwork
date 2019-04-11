@@ -16,13 +16,6 @@ public class Main {
             }
         });
 
-        Neurone sortie2 = new Neurone(0, new Action() {
-            @Override
-            public void perform() {
-                System.out.println("J'ai été solicité2");
-            }
-        });
-
         Neurone neurone1 = new Neurone(0, new Connexion(sortie, 0.7));
         Neurone neurone2 = new Neurone(0, new Connexion(sortie, 0.3));
         Neurone neurone3 = new Neurone(0, new Connexion(sortie, 0.5));
