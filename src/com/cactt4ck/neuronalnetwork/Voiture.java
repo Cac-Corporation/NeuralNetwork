@@ -1,7 +1,6 @@
 package com.cactt4ck.neuronalnetwork;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 
 public class Voiture {
 
