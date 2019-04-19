@@ -21,6 +21,8 @@ public class Main {
         Neurone neurone3 = new Neurone(0, new Connexion(sortie, 0.5));
 
 
+        new Frame();
+
 
         neurone1.broadcast(0.5);
         neurone2.broadcast(0.5);
