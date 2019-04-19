@@ -25,6 +25,6 @@ public class Main {
         neurone1.broadcast(0.5);
         neurone2.broadcast(0.5);
         neurone3.broadcast(0.5);
-        System.out.println("/////" + sortie.toString());
+        System.out.println("/////" + sortie);
     }
 }
