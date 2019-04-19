@@ -22,21 +22,18 @@ public class Panel extends JPanel {
             public void keyPressed(KeyEvent e) {
                 Voiture voiture = voitures.get(0);
                 if(e.getKeyCode() == KeyEvent.VK_UP)
-                    voiture.addVitesse(new Vecteur(0,-1));
+                    voiture.accelerer(0.5);
                 if(e.getKeyCode() == KeyEvent.VK_DOWN)
-                    voiture.addVitesse(new Vecteur(0,1));
+                    voiture.freiner(0.5);
                 if(e.getKeyCode() == KeyEvent.VK_LEFT)
-                    voiture.addVitesse(new Vecteur(-1,0));
+                    voiture.tourner(0.5);
                 if(e.getKeyCode() == KeyEvent.VK_RIGHT)
-                    voiture.addVitesse(new Vecteur(1,0));
+                    voiture.tourner(-0.5);
             }
         });
         this.setFocusable(true);
         this.requestFocusInWindow();
-    }
-
-    private void init(){
-
+        this.start();
     }
 
     @Override
