@@ -16,6 +16,7 @@ public class Frame extends JFrame {
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setContentPane(panel);
+        this.setTitle("TITRE");
         this.setVisible(true);
     }
 

@@ -39,6 +39,10 @@ public class Voiture {
     }
 
     public void update(){
+        this.position = Vecteur.add(position, vitesse);
+    }
 
+    public void addVitesse(Vecteur vitesse){
+        this.vitesse = Vecteur.add(this.vitesse, vitesse);
     }
 }

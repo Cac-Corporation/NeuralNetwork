@@ -16,4 +16,8 @@ public class Vecteur {
     public double getY() {
         return y;
     }
+
+    public static Vecteur add(Vecteur first, Vecteur second){
+        return new Vecteur(first.x + second.x, first.y + second.y);
+    }
 }
