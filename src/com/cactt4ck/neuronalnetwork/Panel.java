@@ -12,23 +12,40 @@ public class Panel extends JPanel {
     private ArrayList<Voiture> voitures;
     private Thread loop;
     private volatile boolean running;
+    private boolean[] commands;
 
     public Panel(){
         super();
         voitures = new ArrayList<Voiture>();
+        commands = new boolean[4];
         voitures.add(new Voiture(100,100));
         this.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 Voiture voiture = voitures.get(0);
                 if(e.getKeyCode() == KeyEvent.VK_UP)
-                    voiture.accelerer(0.5);
+                    commands[0] = true;
                 if(e.getKeyCode() == KeyEvent.VK_DOWN)
-                    voiture.freiner(0.5);
+                    commands[1] = true;
                 if(e.getKeyCode() == KeyEvent.VK_LEFT)
-                    voiture.tourner(0.5);
+                    commands[2] = true;
                 if(e.getKeyCode() == KeyEvent.VK_RIGHT)
-                    voiture.tourner(-0.5);
+                    commands[3] = true;
+                if(e.getKeyCode() == KeyEvent.VK_ENTER)
+                    voiture.setAlive(true);
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                Voiture voiture = voitures.get(0);
+                if(e.getKeyCode() == KeyEvent.VK_UP)
+                    commands[0] = false;
+                if(e.getKeyCode() == KeyEvent.VK_DOWN)
+                    commands[1] = false;
+                if(e.getKeyCode() == KeyEvent.VK_LEFT)
+                    commands[2] = false;
+                if(e.getKeyCode() == KeyEvent.VK_RIGHT)
+                    commands[3] = false;
             }
         });
         this.setFocusable(true);
@@ -47,6 +64,8 @@ public class Panel extends JPanel {
         g2.drawRect(0,0,500,475);
         g2.setStroke(stroke);
 
+        g2.fillOval(200, 187, 100, 100);
+
         for(Voiture v : voitures){
             v.draw(g2);
         }
@@ -60,6 +79,14 @@ public class Panel extends JPanel {
             @Override
             public void run() {
                 while (running){
+                    if(commands[0])
+                        voitures.get(0).accelerer(0.05);
+                    if(commands[1])
+                        voitures.get(0).freiner(0.05);
+                    if(commands[2])
+                        voitures.get(0).tourner(0.05);
+                    if(commands[3])
+                        voitures.get(0).tourner(-0.05);
                     for(Voiture v : voitures)
                         v.update();
                     repaint();
