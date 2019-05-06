@@ -5,7 +5,7 @@ import java.awt.*;
 public class Voiture {
 
     private Vecteur position;
-    private double angle,  vitesse;
+    private double angle,  vitesse, distancWest, distanceEast, distanceNorth, distanceSouth;
     private final Color couleur;
     private boolean alive;
 
@@ -98,6 +98,24 @@ public class Voiture {
                 vitesse = 0D;
         }
     }
+
+
+    public double getDistancWest() {
+        return distancWest;
+    }
+
+    public double getDistanceEast() {
+        return distanceEast;
+    }
+
+    public double getDistanceNorth() {
+        return distanceNorth;
+    }
+
+    public double getDistanceSouth() {
+        return distanceSouth;
+    }
+
 
     public void tourner(double angle){
         if(alive)

@@ -5,7 +5,6 @@ public class Neurone {
     private final double bias;
     private final Connexion[] connexions;
     private final Action action;
-
     private double somme;
 
 
@@ -19,7 +18,6 @@ public class Neurone {
         this.somme = 0;
         this.action = action;
     }
-
 
 
     public void getMessage(double input){
