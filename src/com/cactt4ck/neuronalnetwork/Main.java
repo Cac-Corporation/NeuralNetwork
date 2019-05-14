@@ -1,5 +1,9 @@
 package com.cactt4ck.neuronalnetwork;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class Main {
 
     public static void main(String[] args){
@@ -20,13 +24,13 @@ public class Main {
         Neurone neurone2 = new Neurone(0, new Connexion(sortie, 0.3));
         Neurone neurone3 = new Neurone(0, new Connexion(sortie, 0.5));
 
-
         new Frame();
-
 
         neurone1.broadcast(0.5);
         neurone2.broadcast(0.5);
         neurone3.broadcast(0.5);
+
+
         System.out.println("/////" + sortie);
     }
 }

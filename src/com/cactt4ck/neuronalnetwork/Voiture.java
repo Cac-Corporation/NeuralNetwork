@@ -5,7 +5,7 @@ import java.awt.*;
 public class Voiture {
 
     private Vecteur position;
-    private double angle,  vitesse, distancWest, distanceEast, distanceNorth, distanceSouth;
+    private double angle,  vitesse, distanceWest, distanceEast, distanceNorth, distanceSouth;
     private final Color couleur;
     private boolean alive;
 
@@ -100,8 +100,8 @@ public class Voiture {
     }
 
 
-    public double getDistancWest() {
-        return distancWest;
+    public double getDistanceWest() {
+        return distanceWest;
     }
 
     public double getDistanceEast() {

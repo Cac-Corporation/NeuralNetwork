@@ -1,7 +1,10 @@
 package com.cactt4ck.neuronalnetwork;
 
-public class Connexion {
+import java.io.Serializable;
 
+public class Connexion implements Serializable {
+
+    private static final long serialVersionUID = 1002369697829466020L;
     private final Neurone output;
     private final double weight;
 
