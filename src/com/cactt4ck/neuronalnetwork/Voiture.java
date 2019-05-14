@@ -4,12 +4,12 @@ import java.awt.*;
 
 public class Voiture {
 
-    private Vecteur position;
+    private Vector position;
     private double angle,  vitesse, distanceWest, distanceEast, distanceNorth, distanceSouth;
     private final Color couleur;
     private boolean alive;
 
-    public Voiture(Vecteur position){
+    public Voiture(Vector position){
         this.position = position;
         this.angle = Math.PI/2D;
         this.vitesse = 0D;
@@ -18,10 +18,10 @@ public class Voiture {
     }
 
     public Voiture(double x, double y){
-        this(new Vecteur(x,y)); //appel de l'autre constructeur
+        this(new Vector(x,y)); //appel de l'autre constructeur
     }
 
-    public Vecteur getPosition() {
+    public Vector getPosition() {
         return position;
     }
 
@@ -40,42 +40,11 @@ public class Voiture {
     public void update(){
         if(!alive)
             return;
-        this.position = Vecteur.add(position, new Vecteur(
+        this.position = Vector.add(position, new Vector(
                 vitesse*Math.cos(angle),
                 -vitesse*Math.sin(angle)
         ));
         this.freiner(0.0025D);
-
-        if(position.getX() < 25){
-            position = new Vecteur(30, position.getY());
-            vitesse = 0;
-            angle += Math.PI;
-            alive = false;
-        }
-        if(position.getY() < 25){
-            position = new Vecteur(position.getX(), 30);
-            vitesse = 0;
-            angle += Math.PI;
-            alive = false;
-        }
-        if(position.getX() > 475) {
-            position = new Vecteur(470, position.getY());
-            vitesse = 0;
-            angle += Math.PI;
-            alive = false;
-        }
-        if(position.getY() > 450) {
-            position = new Vecteur(position.getX(), 445);
-            vitesse = 0;
-            angle += Math.PI;
-            alive = false;
-        }
-        if(Math.pow(position.getX() - 250, 2) + Math.pow(position.getY() - 237, 2) <= 2500){
-            position = new Vecteur(position.getX(), 445);
-            vitesse = 0;
-            angle += Math.PI;
-            alive = false;
-        }
     }
 
     public double getAngle() {
@@ -99,6 +68,21 @@ public class Voiture {
         }
     }
 
+    public void setDistanceWest(double distanceWest) {
+        this.distanceWest = distanceWest;
+    }
+
+    public void setDistanceEast(double distanceEast) {
+        this.distanceEast = distanceEast;
+    }
+
+    public void setDistanceNorth(double distanceNorth) {
+        this.distanceNorth = distanceNorth;
+    }
+
+    public void setDistanceSouth(double distanceSouth) {
+        this.distanceSouth = distanceSouth;
+    }
 
     public double getDistanceWest() {
         return distanceWest;

@@ -1,6 +1,8 @@
 package com.cactt4ck.neuronalnetwork.solid;
 
-import com.cactt4ck.neuronalnetwork.Vecteur;
+import com.cactt4ck.neuronalnetwork.Affine;
+import com.cactt4ck.neuronalnetwork.Segment;
+import com.cactt4ck.neuronalnetwork.Vector;
 
 import java.awt.*;
 
@@ -12,8 +14,10 @@ public abstract class Solid {
         this.color = color;
     }
 
-    public abstract boolean isInside(Vecteur point);
+    public abstract boolean isInside(Vector point);
     public abstract void draw(Graphics2D g2);
+    public abstract Vector getIntersection(Segment segment);
+    public abstract double getDistanceFrom(Segment segment);
 
     public Color getColor() {
         return color;

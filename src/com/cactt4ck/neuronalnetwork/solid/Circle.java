@@ -1,15 +1,17 @@
 package com.cactt4ck.neuronalnetwork.solid;
 
-import com.cactt4ck.neuronalnetwork.Vecteur;
+import com.cactt4ck.neuronalnetwork.Affine;
+import com.cactt4ck.neuronalnetwork.Segment;
+import com.cactt4ck.neuronalnetwork.Vector;
 
 import java.awt.*;
 
 public class Circle extends Solid{
 
-    private final Vecteur position;
+    private final Vector position;
     private final int radius;
 
-    public Circle(Color color, Vecteur position, int radius) {
+    public Circle(Color color, Vector position, int radius) {
         super(color);
         this.radius = radius;
         this.position = position;
@@ -18,7 +20,7 @@ public class Circle extends Solid{
 
 
     @Override
-    public boolean isInside(Vecteur point) {
+    public boolean isInside(Vector point) {
         //(x-a)^2 + (y-b)^2 = r^2//
         return Math.pow(point.getX()-position.getX(), 2) + Math.pow(point.getY()-position.getY(), 2) <= Math.pow(radius, 2);
     }
@@ -29,7 +31,17 @@ public class Circle extends Solid{
         g2.fillOval((int) position.getX()-radius, (int) position.getY()-radius, radius*2, radius*2);
     }
 
-    public Vecteur getPosition() {
+    @Override
+    public Vector getIntersection(Segment segment) {
+        return null;
+    }
+
+    @Override
+    public double getDistanceFrom(Segment segment) {
+        return 0;
+    }
+
+    public Vector getPosition() {
         return position;
     }
 
