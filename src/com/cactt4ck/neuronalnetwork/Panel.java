@@ -28,9 +28,18 @@ public class Panel extends JPanel {
         solids.add(new Rectangle(Color.BLACK, new Vector(475, 0) , new Vector(25,500)));
         solids.add(new Rectangle(Color.BLACK, new Vector(0, 450) , new Vector(500,25)));
 
+        solids.add(new Rectangle(Color.BLACK, new Vector(200,175), new Vector(100,25)));
+        solids.add(new Rectangle(Color.BLACK, new Vector(200,250), new Vector(100,25)));
+        solids.add(new Rectangle(Color.BLACK, new Vector(200,175), new Vector(25,100)));
+        solids.add(new Rectangle(Color.BLACK, new Vector(275,175), new Vector(25,100)));
+
         voitures = new ArrayList<Voiture>();
         commands = new boolean[4];
         voitures.add(new Voiture(100,100));
+        Voiture IA = new Voiture(400,100);
+        IA.addNeuralNetwork();
+        voitures.add(IA);
+
         this.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -98,29 +107,35 @@ public class Panel extends JPanel {
                         voitures.get(0).tourner(-0.05);
                     for(Voiture v : voitures) {
                         v.update();
-                        double dn=10000, ds=10000, dw=10000, de=10000;
+                        double dn = -1, ds = -1, de = -1, dw = -1;
                         for (Solid solid : solids){
                             if(solid.isInside(v.getPosition())) {
                                 v.setAlive(false);
                                 break;
                             }
-                            dn = Math.min(solid.getDistanceFrom(Segment.fromVector(v.getPosition(), new Vector(10000D * Math.cos(v.getAngle()),
-                                    -10000D * Math.sin(v.getAngle())))), dn);
-
-                            ds = Math.min(solid.getDistanceFrom(Segment.fromVector(v.getPosition(), new Vector(10000D * Math.cos(v.getAngle() + Math.PI/2d),
-                                    -10000D * Math.sin(v.getAngle()+ Math.PI/2d)))), ds);
-
-                            dw = Math.min(solid.getDistanceFrom(Segment.fromVector(v.getPosition(), new Vector(10000D * Math.cos(v.getAngle() + Math.PI),
-                                    -10000D * Math.sin(v.getAngle()+ Math.PI)))), dw);
-
-                            de = Math.min(solid.getDistanceFrom(Segment.fromVector(v.getPosition(), new Vector(10000D * Math.cos(v.getAngle() - Math.PI/2d),
-                                    -10000D * Math.sin(v.getAngle()- Math.PI/2d)))), de);
+                            if (solid instanceof Rectangle){
+                                Rectangle rectangle = (Rectangle)solid;
+                                if(rectangle.getRatio() >= 1D && v.getPosition().getY() >= rectangle.getPosition().getY() && v.getPosition().getY() <= rectangle.getPosition().getY() + rectangle.getDimension().getY()){
+                                    double cde = rectangle.getPosition().getX() - v.getPosition().getX(),
+                                            cdw = v.getPosition().getX() - rectangle.getPosition().getX() - rectangle.getDimension().getX();
+                                    if(cde >= 0D && (de == -1 || cde < de))
+                                        de = cde;
+                                    if(cdw >= 0D && (dw == -1 || cdw < dw))
+                                        dw = cdw;
+                                }else if(rectangle.getRatio() < 1D && v.getPosition().getX() >= rectangle.getPosition().getX() && v.getPosition().getX() <= rectangle.getPosition().getX() + rectangle.getDimension().getX()) {
+                                    double cds = rectangle.getPosition().getY() - v.getPosition().getY(),
+                                            cdn = v.getPosition().getY() - rectangle.getPosition().getY() - rectangle.getDimension().getY();
+                                    if(cdn >= 0D && (dn == -1 || cdn < dn))
+                                        dn = cdn;
+                                    if(cds >= 0D && (ds == -1 || cds < ds))
+                                        ds = cds;
+                                }
+                            }
                         }
                         v.setDistanceNorth(dn);
                         v.setDistanceSouth(ds);
-                        v.setDistanceWest(dw);
                         v.setDistanceEast(de);
-                        System.out.println("N=" + v.getDistanceNorth() + "     S=" + v.getDistanceSouth() + "     W=" + v.getDistanceWest() + "     E=" + v.getDistanceEast());
+                        v.setDistanceWest(dw);
                     }
                     repaint();
                     try {
@@ -132,6 +147,10 @@ public class Panel extends JPanel {
             }
         });
         loop.start();
+    }
+
+    private boolean isInside(double start, double x, double end){
+        return x >= start && x <= end;
     }
 
     public void stop(){

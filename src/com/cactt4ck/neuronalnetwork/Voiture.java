@@ -8,6 +8,7 @@ public class Voiture {
     private double angle,  vitesse, distanceWest, distanceEast, distanceNorth, distanceSouth;
     private final Color couleur;
     private boolean alive;
+    private NeuralNetwork network;
 
     public Voiture(Vector position){
         this.position = position;
@@ -15,10 +16,37 @@ public class Voiture {
         this.vitesse = 0D;
         this.alive = true;
         this.couleur = new Color((int)(Math.random()*128D), (int)(Math.random()*128D), (int)(Math.random()*128D));
+        this.network = null;
     }
 
     public Voiture(double x, double y){
         this(new Vector(x,y)); //appel de l'autre constructeur
+    }
+
+    public NeuralNetwork getNetwork() {
+        return network;
+    }
+
+    public void addNeuralNetwork(double[][] scheme){
+        Neurone accelerate = new Neurone(1F, () -> this.accelerer(0.05D)),
+                decelerate = new Neurone(1F, () -> this.freiner(0.05D)),
+                left = new Neurone(1F, () -> this.tourner(0.05D)),
+                right = new Neurone(1F, () -> this.tourner(-0.05D));
+        Neurone speedInput = new Neurone(1F, new Connexion(accelerate, scheme == null ? Math.random() : scheme[0][0]), new Connexion(decelerate, scheme == null ? Math.random() : scheme[0][1]), new Connexion(left, scheme == null ? Math.random() : scheme[0][2]), new Connexion(right, scheme == null ? Math.random() : scheme[0][3])),
+                northInput = new Neurone(1F, new Connexion(accelerate, scheme == null ? Math.random() : scheme[1][0]), new Connexion(decelerate, scheme == null ? Math.random() : scheme[1][1]), new Connexion(left, scheme == null ? Math.random() : scheme[1][2]), new Connexion(right, scheme == null ? Math.random() : scheme[1][3])),
+                southInput = new Neurone(1F, new Connexion(accelerate, scheme == null ? Math.random() : scheme[2][0]), new Connexion(decelerate, scheme == null ? Math.random() : scheme[2][1]), new Connexion(left, scheme == null ? Math.random() : scheme[2][2]), new Connexion(right, scheme == null ? Math.random() : scheme[2][3])),
+                eastInput = new Neurone(1F, new Connexion(accelerate, scheme == null ? Math.random() : scheme[3][0]), new Connexion(decelerate, scheme == null ? Math.random() : scheme[3][1]), new Connexion(left, scheme == null ? Math.random() : scheme[3][2]), new Connexion(right, scheme == null ? Math.random() : scheme[3][3])),
+                westInput = new Neurone(1F, new Connexion(accelerate, scheme == null ? Math.random() : scheme[4][0]), new Connexion(decelerate, scheme == null ? Math.random() : scheme[4][1]), new Connexion(left, scheme == null ? Math.random() : scheme[4][2]), new Connexion(right, scheme == null ? Math.random() : scheme[4][3]));
+
+        this.network = new NeuralNetwork(new Neurone[]{
+                speedInput, northInput, southInput, eastInput, westInput
+        }, new Neurone[]{
+                accelerate, decelerate, left, right
+        });
+    }
+
+    public void addNeuralNetwork(){
+        this.addNeuralNetwork(null);
     }
 
     public Vector getPosition() {
@@ -45,6 +73,13 @@ public class Voiture {
                 -vitesse*Math.sin(angle)
         ));
         this.freiner(0.0025D);
+        if(this.network != null){
+            this.network.getInput()[0].broadcast(this.vitesse);
+            this.network.getInput()[1].broadcast(80D/this.distanceNorth - 1D);
+            this.network.getInput()[2].broadcast(80D/this.distanceSouth - 1D);
+            this.network.getInput()[3].broadcast(80D/this.distanceEast - 1D);
+            this.network.getInput()[4].broadcast(80D/this.distanceWest - 1D);
+        }
     }
 
     public double getAngle() {
@@ -103,7 +138,7 @@ public class Voiture {
 
     public void tourner(double angle){
         if(alive)
-            this.angle += angle;
+            this.angle = (this.angle + angle)%(2D*Math.PI);
     }
 
     public boolean isAlive() {

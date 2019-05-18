@@ -40,4 +40,7 @@ public class Neurone implements Serializable {
         }
     }
 
+    public Connexion[] getConnexions() {
+        return connexions;
+    }
 }

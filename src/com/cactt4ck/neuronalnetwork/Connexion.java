@@ -17,4 +17,13 @@ public class Connexion implements Serializable {
         this.output.getMessage(weight*value);
     }
 
+    public Neurone getOutput() {
+        return output;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+
 }
