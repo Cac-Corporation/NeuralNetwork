@@ -28,10 +28,10 @@ public class Voiture {
     }
 
     public void addNeuralNetwork(double[][] scheme){
-        Neurone accelerate = new Neurone(1F, () -> this.accelerer(0.05D)),
-                decelerate = new Neurone(1F, () -> this.freiner(0.05D)),
-                left = new Neurone(1F, () -> this.tourner(0.05D)),
-                right = new Neurone(1F, () -> this.tourner(-0.05D));
+        Neurone accelerate = new Neurone(1F, () -> this.accelerer(0.025D)),
+                decelerate = new Neurone(1F, () -> this.freiner(0.025D)),
+                left = new Neurone(1F, () -> this.tourner(0.05)),
+                right = new Neurone(1F, () -> this.tourner(-0.05));
         Neurone speedInput = new Neurone(1F, new Connexion(accelerate, scheme == null ? Math.random() : scheme[0][0]), new Connexion(decelerate, scheme == null ? Math.random() : scheme[0][1]), new Connexion(left, scheme == null ? Math.random() : scheme[0][2]), new Connexion(right, scheme == null ? Math.random() : scheme[0][3])),
                 northInput = new Neurone(1F, new Connexion(accelerate, scheme == null ? Math.random() : scheme[1][0]), new Connexion(decelerate, scheme == null ? Math.random() : scheme[1][1]), new Connexion(left, scheme == null ? Math.random() : scheme[1][2]), new Connexion(right, scheme == null ? Math.random() : scheme[1][3])),
                 southInput = new Neurone(1F, new Connexion(accelerate, scheme == null ? Math.random() : scheme[2][0]), new Connexion(decelerate, scheme == null ? Math.random() : scheme[2][1]), new Connexion(left, scheme == null ? Math.random() : scheme[2][2]), new Connexion(right, scheme == null ? Math.random() : scheme[2][3])),
