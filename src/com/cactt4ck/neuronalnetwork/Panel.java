@@ -9,18 +9,27 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Panel extends JPanel {
 
+    private int simulationCount, maxCheckpoint;
+    private double maxDistance;
+    private double[][] bestScheme;
     private ArrayList<Voiture> voitures;
-    private ArrayList<Solid> solids;
+    private ArrayList<Solid> solids, checkpoints;
     private Thread loop;
     private volatile boolean running;
     private boolean[] commands;
+    private static final long TIME_MULTIPLIER = 7L;
 
-    public Panel(){
+
+    public Panel(Voiture... cars){
         super();
+        simulationCount = 0;
+        bestScheme = null;
         solids = new ArrayList<Solid>();
+        checkpoints = new ArrayList<Solid>();
         //solids.add(new Circle(Color.BLACK, new Vector(250, 237) , 50));
 
         solids.add(new Rectangle(Color.BLACK, new Vector(0, 0) , new Vector(500,25)));
@@ -28,17 +37,32 @@ public class Panel extends JPanel {
         solids.add(new Rectangle(Color.BLACK, new Vector(475, 0) , new Vector(25,500)));
         solids.add(new Rectangle(Color.BLACK, new Vector(0, 450) , new Vector(500,25)));
 
+
         solids.add(new Rectangle(Color.BLACK, new Vector(200,175), new Vector(100,25)));
         solids.add(new Rectangle(Color.BLACK, new Vector(200,250), new Vector(100,25)));
         solids.add(new Rectangle(Color.BLACK, new Vector(200,175), new Vector(25,100)));
         solids.add(new Rectangle(Color.BLACK, new Vector(275,175), new Vector(25,100)));
 
+
+
+        checkpoints.add(new Rectangle(Color.BLUE, new Vector(25,254), new Vector(175,10)));
+
+        checkpoints.add(new Rectangle(Color.BLUE, new Vector(200,25), new Vector(10,150)));
+        checkpoints.add(new Rectangle(Color.BLUE, new Vector(210,25), new Vector(10,150)));
+
+        checkpoints.add(new Rectangle(Color.BLUE, new Vector(300,175), new Vector(175,10)));
+        checkpoints.add(new Rectangle(Color.BLUE, new Vector(300,185), new Vector(175,10)));
+
+        checkpoints.add(new Rectangle(Color.BLUE, new Vector(289,275), new Vector(10,175)));
+        checkpoints.add(new Rectangle(Color.BLUE, new Vector(279,275), new Vector(10,175)));
+
+        checkpoints.add(new Rectangle(Color.BLUE, new Vector(25,264), new Vector(175,10)));
+
         voitures = new ArrayList<Voiture>();
         commands = new boolean[4];
-        voitures.add(new Voiture(100,100));
-        Voiture IA = new Voiture(400,100);
-        IA.addNeuralNetwork();
-        voitures.add(IA);
+        for (Voiture voiture : cars){
+            voitures.add(voiture);
+        }
 
         this.addKeyListener(new KeyAdapter() {
             @Override
@@ -84,7 +108,8 @@ public class Panel extends JPanel {
 
         for(Solid solid : solids)
             solid.draw(g2);
-
+        /*for(Solid solid : checkpoints)
+            solid.draw(g2);*/
         for(Voiture v : voitures)
             v.draw(g2);
     }
@@ -93,9 +118,7 @@ public class Panel extends JPanel {
         if(running)
             return;
         running = true;
-        loop = new Thread(new Runnable() {
-            @Override
-            public void run() {
+        loop = new Thread( () -> {
                 while (running){
                     if(commands[0])
                         voitures.get(0).accelerer(0.05);
@@ -105,8 +128,15 @@ public class Panel extends JPanel {
                         voitures.get(0).tourner(0.05);
                     if(commands[3])
                         voitures.get(0).tourner(-0.05);
+                    boolean oneAlive = false;
                     for(Voiture v : voitures) {
                         v.update();
+
+                        if(v.equals(voitures.get(0)))
+                            continue;
+                        if(v.isAlive())
+                            oneAlive = true;
+
                         double dn = -1, ds = -1, de = -1, dw = -1;
                         for (Solid solid : solids){
                             if(solid.isInside(v.getPosition())) {
@@ -136,21 +166,59 @@ public class Panel extends JPanel {
                         v.setDistanceSouth(ds);
                         v.setDistanceEast(de);
                         v.setDistanceWest(dw);
+                        for (int i =0;i<checkpoints.size();i++){
+                            if(checkpoints.get(i).isInside(v.getPosition())){
+                                v.setCheckpoint(i);
+                            }
+                        }
+                        if(System.currentTimeMillis() - v.getLastCheckpointInstant() >= 5000L/TIME_MULTIPLIER){
+                            v.setAlive(false);
+                        }
                     }
+                    if(!oneAlive) {
+                        int cMaxCheckpoint = this.maxCheckpoint;
+                        double cMaxDistance = this.maxDistance;
+                        double[][] cBestScheme = this.bestScheme;
+
+                        for(Voiture v : voitures){
+                            if(v.equals(voitures.get(0)))
+                                continue;
+                            if(v.getCheckpointCount() > cMaxCheckpoint || (v.getCheckpointCount() == cMaxCheckpoint && v.getTotalDistance() > cMaxDistance)){
+                                cMaxCheckpoint = v.getCheckpointCount();
+                                cMaxDistance = v.getTotalDistance();
+                                cBestScheme = v.getNetwork().getScheme();
+                            }
+                        }
+                        if(this.bestScheme == null || !Arrays.deepEquals(this.bestScheme, cBestScheme))
+                            simulationCount++;
+                        this.bestScheme = cBestScheme;
+                        this.maxCheckpoint = cMaxCheckpoint;
+                        this.maxDistance = cMaxDistance;
+                        createVoitures();
+                    }
+
                     repaint();
                     try {
-                        Thread.sleep(7L);
+                        Thread.sleep(7L/TIME_MULTIPLIER);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
             }
-        });
+        );
         loop.start();
     }
 
     private boolean isInside(double start, double x, double end){
         return x >= start && x <= end;
+    }
+
+    private void createVoitures(){
+        System.out.println("Simulation numéro : " + simulationCount + " - Max Checkpoint : " + this.maxCheckpoint);
+        for(int i = 1;i<voitures.size();i++){
+            voitures.get(i).setNeuralNetwork(NeuralNetwork.getMutated(this.bestScheme, 0.2D/ (double) Math.pow(this.simulationCount, 2)));
+            voitures.get(i).setAlive(true);
+        }
     }
 
     public void stop(){

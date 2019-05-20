@@ -14,30 +14,32 @@ public class Main {
          *
          *le poids des connexions influe sur la valeur du message transmis & le bias est l'importance d'un neurone seul
          */
-        Neurone sortie = new Neurone(0, new Action() {
+        /*Neurone sortie = new Neurone(0, new Action() {
             @Override
             public void perform() {
                 System.out.println("Neurone solicité");
             }
         });
-
-
         Neurone neurone1 = new Neurone(0, new Connexion(sortie, 0.7));
         Neurone neurone2 = new Neurone(0, new Connexion(sortie, 0.3));
         Neurone neurone3 = new Neurone(0, new Connexion(sortie, 0.5));
+        neurone1.broadcast(0.5);
+        neurone2.broadcast(0.5);
+        neurone3.broadcast(0.5);*/
+
+        Voiture[] voitures = new Voiture[500];
+        voitures[0] = new Voiture(100,100);
+        for (int i =1;i<voitures.length;i++){
+            voitures[i] = new Voiture(100,200);
+            voitures[i].addNeuralNetwork();
+        }
 
         SwingUtilities.invokeLater(new Runnable() { // thread graphique (ewt)
             @Override
             public void run() {
-                new Frame();
+                new Frame(voitures);
             }
         });
 
-        neurone1.broadcast(0.5);
-        neurone2.broadcast(0.5);
-        neurone3.broadcast(0.5);
-
-
-        System.out.println("/////" + sortie);
     }
 }

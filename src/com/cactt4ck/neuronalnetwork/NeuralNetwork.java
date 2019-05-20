@@ -29,13 +29,13 @@ public class NeuralNetwork {
         return scheme;
     }
 
-    public double[][] getMutated(double factor){
-        double[][] scheme = this.getScheme();
-        for(int i = 0; i < input.length; i++){
-            for (int j = 0; j < output.length; j++){
-                scheme[i][j] *= (Math.random()-0.5D)*factor;
+    public static double[][] getMutated(double[][] scheme, double factor){
+        double[][] mutated = new double[scheme.length][scheme[0].length];
+        for(int i = 0; i < mutated.length; i++){
+            for (int j = 0; j < mutated[0].length; j++){
+                mutated[i][j] = scheme[i][j] + ((Math.random()-0.5D)*factor);
             }
         }
-        return scheme;
+        return mutated;
     }
 }
