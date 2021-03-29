@@ -2,13 +2,13 @@ package com.cactt4ck.neuronalnetwork;
 
 import java.io.Serializable;
 
-public class Connexion implements Serializable {
+public class Synapse implements Serializable {
 
     private static final long serialVersionUID = 1002369697829466020L;
     private final Neurone output;
     private final double weight;
 
-    public Connexion(Neurone output, double weight){
+    public Synapse(Neurone output, double weight){
         this.output = output;
         this.weight = weight;
     }

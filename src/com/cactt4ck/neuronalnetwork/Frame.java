@@ -4,12 +4,12 @@ import javax.swing.*;
 
 public class Frame extends JFrame {
 
-    public Frame(Voiture... cars){
+    public Frame(Car... cars){
         super();
         this.init(cars);
     }
 
-    private void init(Voiture... cars){
+    private void init(Car... cars){
         this.setSize(500,500);
         Panel panel = new Panel(cars);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

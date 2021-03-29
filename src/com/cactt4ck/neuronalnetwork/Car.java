@@ -2,7 +2,7 @@ package com.cactt4ck.neuronalnetwork;
 
 import java.awt.*;
 
-public class Voiture {
+public class Car {
 
     private Vector position;
     private double angle,  vitesse, distanceWest, distanceEast, distanceNorth, distanceSouth;
@@ -13,7 +13,7 @@ public class Voiture {
     private double totalDistance;
     private int checkpoint, checkpointCount;
 
-    public Voiture(Vector position){
+    public Car(Vector position){
         this.position = position;
         this.angle = Math.PI/2D;
         this.vitesse = 0D;
@@ -23,7 +23,7 @@ public class Voiture {
         this.setAlive(true);
     }
 
-    public Voiture(double x, double y){
+    public Car(double x, double y){
         this(new Vector(x,y)); //appel de l'autre constructeur
     }
 
@@ -31,40 +31,40 @@ public class Voiture {
         return network;
     }
 
-    public void setNeuralNetwork(double[][] scheme){
+    public void setNeuralNetwork(double[][] scheme) {
         Neurone accelerate = new Neurone(1F, () -> this.accelerer(0.025D)),
                 decelerate = new Neurone(1F, () -> this.freiner(0.025D)),
                 left = new Neurone(1F, () -> this.tourner(0.05)),
                 right = new Neurone(1F, () -> this.tourner(-0.05));
         Neurone speedInput = new Neurone(1F,
-                        new Connexion(accelerate, scheme == null ? Math.random() : scheme[0][0]), //condition ternaire if null math.random sinon scheme
-                        new Connexion(decelerate, scheme == null ? Math.random() : scheme[0][1]),
-                        new Connexion(left, scheme == null ? Math.random() : scheme[0][2]),
-                        new Connexion(right, scheme == null ? Math.random() : scheme[0][3])),
+                new Synapse(accelerate, scheme == null ? Math.random() : scheme[0][0]), //condition ternaire if null math.random sinon scheme
+                new Synapse(decelerate, scheme == null ? Math.random() : scheme[0][1]),
+                new Synapse(left, scheme == null ? Math.random() : scheme[0][2]),
+                new Synapse(right, scheme == null ? Math.random() : scheme[0][3])),
 
                 northInput = new Neurone(1F,
-                        new Connexion(accelerate, scheme == null ? Math.random() : scheme[1][0]),
-                        new Connexion(decelerate, scheme == null ? Math.random() : scheme[1][1]),
-                        new Connexion(left, scheme == null ? Math.random() : scheme[1][2]),
-                        new Connexion(right, scheme == null ? Math.random() : scheme[1][3])),
+                        new Synapse(accelerate, scheme == null ? Math.random() : scheme[1][0]),
+                        new Synapse(decelerate, scheme == null ? Math.random() : scheme[1][1]),
+                        new Synapse(left, scheme == null ? Math.random() : scheme[1][2]),
+                        new Synapse(right, scheme == null ? Math.random() : scheme[1][3])),
 
                 southInput = new Neurone(1F,
-                        new Connexion(accelerate, scheme == null ? Math.random() : scheme[2][0]),
-                        new Connexion(decelerate, scheme == null ? Math.random() : scheme[2][1]),
-                        new Connexion(left, scheme == null ? Math.random() : scheme[2][2]),
-                        new Connexion(right, scheme == null ? Math.random() : scheme[2][3])),
+                        new Synapse(accelerate, scheme == null ? Math.random() : scheme[2][0]),
+                        new Synapse(decelerate, scheme == null ? Math.random() : scheme[2][1]),
+                        new Synapse(left, scheme == null ? Math.random() : scheme[2][2]),
+                        new Synapse(right, scheme == null ? Math.random() : scheme[2][3])),
 
                 eastInput = new Neurone(1F,
-                        new Connexion(accelerate, scheme == null ? Math.random() : scheme[3][0]),
-                        new Connexion(decelerate, scheme == null ? Math.random() : scheme[3][1]),
-                        new Connexion(left, scheme == null ? Math.random() : scheme[3][2]),
-                        new Connexion(right, scheme == null ? Math.random() : scheme[3][3])),
+                        new Synapse(accelerate, scheme == null ? Math.random() : scheme[3][0]),
+                        new Synapse(decelerate, scheme == null ? Math.random() : scheme[3][1]),
+                        new Synapse(left, scheme == null ? Math.random() : scheme[3][2]),
+                        new Synapse(right, scheme == null ? Math.random() : scheme[3][3])),
 
                 westInput = new Neurone(1F,
-                        new Connexion(accelerate, scheme == null ? Math.random() : scheme[4][0]),
-                        new Connexion(decelerate, scheme == null ? Math.random() : scheme[4][1]),
-                        new Connexion(left, scheme == null ? Math.random() : scheme[4][2]),
-                        new Connexion(right, scheme == null ? Math.random() : scheme[4][3]));
+                        new Synapse(accelerate, scheme == null ? Math.random() : scheme[4][0]),
+                        new Synapse(decelerate, scheme == null ? Math.random() : scheme[4][1]),
+                        new Synapse(left, scheme == null ? Math.random() : scheme[4][2]),
+                        new Synapse(right, scheme == null ? Math.random() : scheme[4][3]));
 
         this.network = new NeuralNetwork(new Neurone[]{
                 speedInput, northInput, southInput, eastInput, westInput
@@ -112,7 +112,7 @@ public class Voiture {
         if(alive) {
             g2.setColor(couleur);
             g2.fillOval((int) position.getX() - 2, (int) position.getY() - 2, 5, 5);
-            g2.drawLine((int) position.getX(), (int) position.getY(), (int) (position.getX() + 20D * Math.cos(angle)), (int) (position.getY() - 20D * Math.sin(angle)));
+            //g2.drawLine((int) position.getX(), (int) position.getY(), (int) (position.getX() + 20D * Math.cos(angle)), (int) (position.getY() - 20D * Math.sin(angle)));
         }
     }
 

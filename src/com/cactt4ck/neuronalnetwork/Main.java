@@ -1,9 +1,6 @@
 package com.cactt4ck.neuronalnetwork;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 public class Main {
 
@@ -27,17 +24,17 @@ public class Main {
         neurone2.broadcast(0.5);
         neurone3.broadcast(0.5);*/
 
-        Voiture[] voitures = new Voiture[500];
-        voitures[0] = new Voiture(100,100);
-        for (int i =1;i<voitures.length;i++){
-            voitures[i] = new Voiture(100,200);
-            voitures[i].addNeuralNetwork();
+        Car[] cars = new Car[500];
+        cars[0] = new Car(100,100);
+        for (int i = 1; i< cars.length; i++){
+            cars[i] = new Car(100,200);
+            cars[i].addNeuralNetwork();
         }
 
         SwingUtilities.invokeLater(new Runnable() { // thread graphique (ewt)
             @Override
             public void run() {
-                new Frame(voitures);
+                new Frame(cars);
             }
         });
 
